@@ -1,18 +1,26 @@
 <?php
-echo "<h1>File Encoding Check</h1>";
-$file = 'index.php';
-if (file_exists($file)) {
-    $is_encoded = ioncube_file_is_encoded($file);
-    if ($is_encoded) {
-        echo "<p style='color:green'>File '$file' is ENCODED by Ioncube</p>";
-    } else {
-        echo "<p style='color:red'>File '$file' is NOT ENCODED (or not recognized)</p>";
-    }
+echo "<h1>Ioncube Deep Investigation</h1>";
+
+// Check for known obfuscated functions
+$obfuscated_funcs = ['_il_exec', '_dyuweyrj4', '_dyuweyrj4r'];
+echo "<h2>Function Checks:</h2><ul>";
+foreach ($obfuscated_funcs as $f) {
+    $status = function_exists($f) ? "<b style='color:green'>EXISTS</b>" : "<b style='color:red'>MISSING</b>";
+    echo "<li>Function <code>$f</code>: $status</li>";
+}
+echo "</ul>";
+
+echo "<h2>Encoding Check (Current File):</h2>";
+if (ioncube_file_is_encoded()) {
+    echo "<p style='color:green'>This file (info.php) is ENCODED (Wait, it shouldn't be!)</p>";
 } else {
-    echo "<p style='color:orange'>File '$file' not found</p>";
+    echo "<p style='color:blue'>This file (info.php) is NOT ENCODED (Normal)</p>";
 }
 
-echo "<h1>Ioncube Function List</h1>";
+echo "<h2>Loader Status:</h2>";
+echo "<p>Loader Version: " . (function_exists('ioncube_loader_version') ? ioncube_loader_version() : "Unknown") . "</p>";
+
+echo "<h1>All Ioncube Functions</h1>";
 $funcs = get_extension_funcs('ionCube Loader');
 if ($funcs) {
     echo "<ul>";
