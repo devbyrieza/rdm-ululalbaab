@@ -1,11 +1,17 @@
 <?php
-echo "<h1>Ioncube Function Check</h1>";
-if (function_exists('_il_exec')) {
-    echo "<p style='color:green'>Function '_il_exec' EXISTS</p>";
+echo "<h1>Ioncube Function List</h1>";
+$funcs = get_extension_funcs('ionCube Loader');
+if ($funcs) {
+    echo "<ul>";
+    foreach ($funcs as $f) {
+        echo "<li>$f</li>";
+    }
+    echo "</ul>";
 } else {
-    echo "<p style='color:red'>Function '_il_exec' DOES NOT EXIST</p>";
+    echo "<p style='color:red'>No functions found for 'ionCube Loader'</p>";
 }
 
+echo "<h1>Ioncube Check</h1>";
 if (extension_loaded('ionCube Loader')) {
     echo "<p style='color:green'>Extension 'ionCube Loader' is LOADED</p>";
 } else {
