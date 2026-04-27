@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  rdm-web:
+    build: .
+    container_name: rdm-ululalbaab
+    restart: always
+    networks:
+      - coolify
+    # Let Coolify handle the labels for domains and SSL
+
+networks:
+  coolify:
+    external: true
