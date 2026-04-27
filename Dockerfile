@@ -44,9 +44,6 @@ COPY src/ /var/www/html/
 # Fix permissions
 RUN chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type d -exec chmod 755 {} \; \
-    && find /var/www/html -type f -exec chmod 644 {} \; \
-    && chmod -R 777 /var/www/html/application/config \
-    && chmod 777 /var/www/html/application/config/database.php \
-    && chmod 777 /var/www/html/application/config/config.php
+    && find /var/www/html -type f -exec chmod 644 {} \;
 
 EXPOSE 80
