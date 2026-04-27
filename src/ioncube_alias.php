@@ -1,7 +1,6 @@
 <?php
 /**
- * Ioncube & Database Bridge
- * Digunakan untuk menangani fungsi Ioncube yang hilang dan menyuntikkan setting database
+ * Ioncube & Database Bridge + Debugger
  */
 
 // 1. Alias fungsi Ioncube
@@ -11,20 +10,27 @@ if (!function_exists('_il_exec') && function_exists('_dyuweyrj4')) {
     }
 }
 
-// 2. Suntikan Database (Bypass config folder integrity check)
-// Kita buat variabel global yang akan dibaca oleh CodeIgniter
+// 2. Logging untuk Debug
+$log_file = dirname(__FILE__) . '/debug_rdm.log';
+function rdm_log($msg) {
+    global $log_file;
+    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] " . $msg . "\n", FILE_APPEND);
+}
+
+rdm_log("Request started: " . $_SERVER['REQUEST_URI']);
+
+// 3. Suntikan Database
 global $db;
 if (!isset($db)) {
     $db = array();
 }
 
-// Gunakan 'default' karena ini yang ada di Coolify Anda
-$db['default'] = array(
+$db_config = array(
     'dsn'      => '',
     'hostname' => 'pc80okgks0ocw8kcowogckkk',
     'username' => 'root',
     'password' => 'j6ldBKvb8L7xiydSLkO8mr6ng8eIyn7zXqLMGUBqhz9Ynec2IiVNXmharN0JN7wU',
-    'database' => 'default',
+    'database' => 'rdm_ululalbaab', // Coba ganti ke rdm_ululalbaab
     'dbdriver' => 'mysqli',
     'dbprefix' => '',
     'pconnect' => FALSE,
@@ -41,7 +47,11 @@ $db['default'] = array(
     'save_queries' => TRUE
 );
 
-// Pastikan BASEPATH aman
-if (!defined('BASEPATH')) {
-    // Jangan definisikan di sini agar tidak merusak sistem login CI sesudahnya
-}
+$db['default'] = $db_config;
+rdm_log("Database config injected into global \$db");
+
+// 4. Deteksi jika tertimpa
+register_shutdown_function(function() {
+    global $db;
+    rdm_log("Request finished. Final DB Database: " . ($db['default']['database'] ?? 'NOT SET'));
+});
