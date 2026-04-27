@@ -1,6 +1,6 @@
 <?php
 /**
- * Ioncube & Database Bridge + Debugger
+ * Ioncube, Database & HTTPS Bridge
  */
 
 // 1. Alias fungsi Ioncube
@@ -10,27 +10,24 @@ if (!function_exists('_il_exec') && function_exists('_dyuweyrj4')) {
     }
 }
 
-// 2. Logging untuk Debug
-$log_file = dirname(__FILE__) . '/debug_rdm.log';
-function rdm_log($msg) {
-    global $log_file;
-    file_put_contents($log_file, "[" . date('Y-m-d H:i:s') . "] " . $msg . "\n", FILE_APPEND);
-}
-
-rdm_log("Request started: " . $_SERVER['REQUEST_URI']);
+// 2. Paksa HTTPS (Fix Mixed Content / Stuck 100% Loading)
+$_SERVER['HTTPS'] = 'on';
+$_SERVER['SERVER_PORT'] = 443;
 
 // 3. Suntikan Database
-global $db;
-if (!isset($db)) {
-    $db = array();
-}
+global $db, $config;
+if (!isset($db)) { $db = array(); }
+if (!isset($config)) { $config = array(); }
 
-$db_config = array(
+// Paksa base_url agar pakai HTTPS
+$config['base_url'] = 'https://rdm.alandalus-ululalbaab.com/';
+
+$db['default'] = array(
     'dsn'      => '',
     'hostname' => 'pc80okgks0ocw8kcowogckkk',
     'username' => 'root',
     'password' => 'j6ldBKvb8L7xiydSLkO8mr6ng8eIyn7zXqLMGUBqhz9Ynec2IiVNXmharN0JN7wU',
-    'database' => 'rdm_ululalbaab', // Coba ganti ke rdm_ululalbaab
+    'database' => 'rdm_ululalbaab',
     'dbdriver' => 'mysqli',
     'dbprefix' => '',
     'pconnect' => FALSE,
@@ -47,11 +44,5 @@ $db_config = array(
     'save_queries' => TRUE
 );
 
-$db['default'] = $db_config;
-rdm_log("Database config injected into global \$db");
-
-// 4. Deteksi jika tertimpa
-register_shutdown_function(function() {
-    global $db;
-    rdm_log("Request finished. Final DB Database: " . ($db['default']['database'] ?? 'NOT SET'));
-});
+// Hapus logging agar kencang
+// rdm_log("..."); 
